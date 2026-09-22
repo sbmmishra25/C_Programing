@@ -1,64 +1,36 @@
 # 35. Variable Arguments
 
-## Learning Objective
-Master Variable Arguments through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+stdarg.h provides va_list, va_start, va_arg, va_copy, and va_end for functions whose final parameter is followed by an unspecified number of arguments.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Variable Arguments, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stdarg.h>
+
+double average(size_t count, ...) {
+    va_list ap;
+    va_start(ap, count);
+
+    double sum = 0.0;
+    for (size_t i = 0; i < count; ++i)
+        sum += va_arg(ap, double);
+
+    va_end(ap);
+    return count ? sum / (double)count : 0.0;
+}
 
 int main(void) {
-    puts("Variable Arguments");
+    printf("%.2f\n", average(4, 10.0, 20.0, 30.0, 40.0));
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Critical rule
+The callee cannot know the number or types of variadic arguments automatically. The API must provide a contract, such as a count, format string, or sentinel. Default argument promotions apply: float becomes double and integer types narrower than int are promoted.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Common mistakes
+Using the wrong type in va_arg, missing va_end, relying on an invalid sentinel, and assuming the compiler can infer the argument count.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement a variadic sum, a tagged logging function, and explain how printf's format string supplies type information.
