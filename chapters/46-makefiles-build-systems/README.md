@@ -1,60 +1,35 @@
 # 46. Makefiles & Build Systems
 
-## Learning Objective
-Master Makefiles & Build Systems through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+A build system tracks dependencies and invokes compilation/linking commands only when required.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Makefiles & Build Systems, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
+## Complete Makefile
+~~~make
+CC = cc
+CFLAGS = -std=c17 -Wall -Wextra -Wpedantic -g
+OBJ = main.o math.o
+TARGET = app
 
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
+$(TARGET): $(OBJ)
+	$(CC) $(OBJ) -o $@
 
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
+main.o: main.c math.h
+	$(CC) $(CFLAGS) -c main.c
 
-## Complete C Example
-```c
-#include <stdio.h>
+math.o: math.c math.h
+	$(CC) $(CFLAGS) -c math.c
 
-int main(void) {
-    puts("Makefiles & Build Systems");
-    return 0;
-}
-```
+clean:
+	rm -f $(OBJ) $(TARGET)
 
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+.PHONY: clean
+~~~
 
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
+## Dependency graph
+Changing math.h should rebuild every object that includes it. Source-to-object compilation and object-to-executable linking are separate stages.
 
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
+## Common mistakes
+Missing header dependencies, tabs replaced by spaces in recipes, hard-coded compiler flags, and clean targets that delete unrelated files.
 
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
-
-## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
-
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
-
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Add test, sanitize, release, and install targets. Learn automatic variables such as $@ and $<.
