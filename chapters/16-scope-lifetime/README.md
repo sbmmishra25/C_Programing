@@ -1,1 +1,48 @@
-# 16. Scope & Lifetime\n\n## Learning objective\nBuild a strong understanding of identifier visibility, scope, object lifetime, and shadowing.\n\n## Definition / Concept\nScope & Lifetime is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Scope & Lifetime");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 16. Scope & Lifetime
+
+## Definition
+Scope describes where an identifier is visible in source code. Lifetime describes how long an object exists during execution.
+
+## Main scopes
+C has file scope, block scope, function scope for labels, and function-prototype scope. Scope is primarily a source-language concept; lifetime is an execution-time object property.
+
+## Complete example
+~~~c
+#include <stdio.h>
+
+int global_value = 10;
+
+void demo(void) {
+    static int persistent = 0;
+    int local = 20;
+    ++persistent;
+
+    printf("global=%d local=%d persistent=%d\n",
+           global_value, local, persistent);
+
+    {
+        int local = 99;
+        printf("inner local=%d\n", local);
+    }
+}
+
+int main(void) {
+    demo();
+    demo();
+    return 0;
+}
+~~~
+
+The inner local shadows the outer local. The static object persists between calls; each automatic local has a separate lifetime.
+
+## Lifetime categories
+C objects can have static, thread, automatic, or allocated storage duration. An allocated object exists from successful allocation until it is released.
+
+## Dangling pointers
+A pointer becomes invalid for dereference when the designated object's lifetime ends. Returning the address of an automatic local is therefore invalid.
+
+## Common mistakes
+Confusing scope with lifetime, accidental shadowing, use-after-lifetime, and assuming an unchanged address means an object is still alive.
+
+## Practice
+Trace nested scopes, identify lifetime categories, and design an API that returns data without exposing a pointer to a dead local.
