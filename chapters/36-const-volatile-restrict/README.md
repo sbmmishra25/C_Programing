@@ -1,64 +1,43 @@
 # 36. const, volatile & restrict
 
-## Learning Objective
-Master const, volatile & restrict through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## const
+const expresses that an object should not be modified through a particular lvalue. It improves API contracts:
+~~~c
+void print_array(const int *a, size_t n);
+~~~
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for const, volatile & restrict, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
+## volatile
+volatile tells the implementation that accesses to a volatile-qualified object are observable and must not be optimized away in ways that violate the language rules. It is useful for certain memory-mapped I/O or signal-related scenarios, but volatile is NOT a thread synchronization mechanism.
 
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
+## restrict
+restrict is a promise about aliasing for an execution of a block/function. If used incorrectly, behavior can become undefined because the program violates the restrict contract.
 
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stddef.h>
+
+void add_arrays(size_t n, int *restrict dst,
+                const int *restrict a,
+                const int *restrict b) {
+    for (size_t i = 0; i < n; ++i)
+        dst[i] = a[i] + b[i];
+}
 
 int main(void) {
-    puts("const, volatile & restrict");
+    int a[] = {1,2,3};
+    int b[] = {4,5,6};
+    int c[3];
+
+    add_arrays(3, c, a, b);
+    for (size_t i = 0; i < 3; ++i) printf("%d ", c[i]);
+    putchar('\n');
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Common mistakes
+Treating const as absolute immutability, using volatile for locking, and adding restrict without satisfying its aliasing contract.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
-
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Design read-only APIs, investigate a memory-mapped register example on a documented embedded platform, and compare restrict-enabled and ordinary loops.
