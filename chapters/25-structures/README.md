@@ -1,64 +1,47 @@
 # 25. Structures
 
-## Learning Objective
-Master Structures through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Definition
+A structure groups named members, potentially of different types, into one object. It is the main C mechanism for defining records and nodes.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Structures, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
 
+typedef struct {
+    unsigned id;
+    char name[32];
+    double marks;
+} Student;
+
+void print_student(const Student *s) {
+    printf("id=%u name=%s marks=%.2f\n", s->id, s->name, s->marks);
+}
+
 int main(void) {
-    puts("Structures");
+    Student s = {101, "Asha", 91.5};
+    print_student(&s);
+
+    s.marks += 2.0;
+    print_student(&s);
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Layout and padding
+Members appear in declaration order, but implementations may insert padding for alignment. Therefore sizeof(struct) can exceed the sum of member sizes.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Pointer to structure
+Use p->member when p is a pointer to a structure; it is equivalent to (*p).member.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
+## Self-referential structures
+A structure cannot contain itself by value, but it can contain a pointer to its own type:
+~~~c
+struct Node { int value; struct Node *next; };
+~~~
+This forms the basis of linked lists and trees.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
+## Common mistakes
+Assuming no padding, comparing structures with ==, returning pointers to dead structures, and copying structures that contain pointers without understanding shallow-copy ownership.
 
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Define Employee, Book, Date, Matrix, and linked-list node structures. Implement sorting an array of structures with qsort.
