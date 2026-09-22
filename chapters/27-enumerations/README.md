@@ -1,64 +1,39 @@
 # 27. Enumerations
 
-## Learning Objective
-Master Enumerations through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Definition
+An enum defines named integer constants grouped into an enumeration type. Enumerators improve readability and make state machines and modes easier to understand.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Enumerations, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
 
+typedef enum {
+    STATE_IDLE,
+    STATE_RUNNING,
+    STATE_ERROR
+} State;
+
+const char *state_name(State s) {
+    switch (s) {
+        case STATE_IDLE: return "idle";
+        case STATE_RUNNING: return "running";
+        case STATE_ERROR: return "error";
+        default: return "unknown";
+    }
+}
+
 int main(void) {
-    puts("Enumerations");
+    State s = STATE_RUNNING;
+    printf("%s\n", state_name(s));
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Values
+By default, enumerators receive successive integer values beginning at zero unless explicitly assigned. Explicit values are useful when interfacing with protocols or stable external representations, but the representation and compatible integer type are implementation-defined aspects.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Common mistakes
+Assuming enum values are strings, forgetting a switch default where invalid values are possible, and exposing raw enum values as a stable file/network format without documenting the contract.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Create enums for menu commands, traffic signals, error classes, and parser tokens. Implement exhaustive switch handling.
