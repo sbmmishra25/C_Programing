@@ -1,64 +1,34 @@
 # 37. static, extern & inline
 
-## Learning Objective
-Master static, extern & inline through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## static
+At file scope, static gives internal linkage. At block scope, static gives static storage duration while retaining block scope.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for static, extern & inline, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
+## extern
+extern declares an entity whose definition is provided elsewhere, commonly across translation units.
 
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
+## inline
+inline is a request/definition facility for functions, not a guarantee that the compiler will physically inline the call.
 
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
 
+static int helper(int x) {
+    return x * x;
+}
+
+inline int cube(int x) {
+    return x * x * x;
+}
+
 int main(void) {
-    puts("static, extern & inline");
+    printf("%d %d\n", helper(4), cube(3));
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Multi-file note
+Inline linkage rules can be subtle, especially with external definitions. For ordinary projects, place a static inline helper in a header when each translation unit may have its own internal copy, or provide a normal external definition when one externally linked function is required.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
-
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Build a two-file library using extern and a header containing static inline utilities. Inspect symbols with your platform's object-file tools.
