@@ -1,64 +1,36 @@
 # 32. Conditional Compilation
 
-## Learning Objective
-Master Conditional Compilation through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+The preprocessor can include or exclude source text based on macros. This is useful for platform configuration, feature flags, debug builds, and header guards.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Conditional Compilation, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
 
 int main(void) {
-    puts("Conditional Compilation");
+#ifdef DEBUG
+    puts("debug build");
+#else
+    puts("release-style build");
+#endif
+
+#if defined(_WIN32)
+    puts("Windows target macro detected");
+#elif defined(__linux__)
+    puts("Linux target macro detected");
+#else
+    puts("Other target");
+#endif
     return 0;
 }
-```
+~~~
+Build debug with `cc -DDEBUG file.c -o app`.
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Important distinction
+Conditional compilation happens before C compilation. It is different from a runtime if statement: excluded code is not compiled.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Common mistakes
+Unbalanced #if/#endif, feature macros with inconsistent meanings, testing compiler-specific macros without documentation, and maintaining too many build combinations.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Create DEBUG logging, platform-specific includes, and feature toggles while keeping one portable fallback implementation.
