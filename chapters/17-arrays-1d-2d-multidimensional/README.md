@@ -1,1 +1,50 @@
-# 17. Arrays: 1D, 2D & Multidimensional\n\n## Learning objective\nBuild a strong understanding of contiguous arrays, indexing, 2-D/multidimensional layout, and bounds.\n\n## Definition / Concept\nArrays: 1D, 2D & Multidimensional is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Arrays: 1D, 2D & Multidimensional");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 17. Arrays: 1D, 2D & Multidimensional
+
+## Definition
+An array is a contiguous sequence of objects of one type. Valid indices are zero through length minus one.
+
+## Complete example: matrix addition
+~~~c
+#include <stdio.h>
+
+#define ROWS 2
+#define COLS 3
+
+int main(void) {
+    int a[ROWS][COLS] = {{1,2,3},{4,5,6}};
+    int b[ROWS][COLS] = {{6,5,4},{3,2,1}};
+    int c[ROWS][COLS];
+
+    for (size_t i = 0; i < ROWS; ++i)
+        for (size_t j = 0; j < COLS; ++j)
+            c[i][j] = a[i][j] + b[i][j];
+
+    for (size_t i = 0; i < ROWS; ++i) {
+        for (size_t j = 0; j < COLS; ++j)
+            printf("%d ", c[i][j]);
+        putchar('\n');
+    }
+    return 0;
+}
+~~~
+
+## Memory layout
+A multidimensional array is an array of arrays. The rightmost dimension is contiguous, so a row-major traversal matches the actual C layout and is normally cache-friendly.
+
+Do not confuse a true 2-D array with an array of pointers. Their types, layout, allocation, and indexing semantics differ.
+
+## Function parameters
+A fixed-column matrix can be passed as a pointer to an array:
+~~~c
+void print_matrix(size_t rows, const int a[rows][3]);
+~~~
+For variable-length array parameters, dimensions needed for address calculation must be available in the parameter list.
+
+## Common mistakes
+Out-of-bounds access, wrong row/column limits, using sizeof after array-to-pointer conversion, and assuming a 2-D array is interchangeable with int**.
+
+## Complexity
+An n-element traversal is O(n); an r by c matrix traversal is O(rc).
+
+## Practice
+Transpose, multiply, rotate, search, and dynamically allocate matrices with checked size calculations.
