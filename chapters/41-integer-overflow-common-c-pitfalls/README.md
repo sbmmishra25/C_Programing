@@ -1,60 +1,28 @@
 # 41. Integer Overflow & Common C Pitfalls
 
-## Learning Objective
-Master Integer Overflow & Common C Pitfalls through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Signed and unsigned overflow
+Signed integer overflow is undefined behavior. Unsigned arithmetic is modulo the type's range.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Integer Overflow & Common C Pitfalls, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
+#include <limits.h>
 #include <stdio.h>
 
 int main(void) {
-    puts("Integer Overflow & Common C Pitfalls");
+    int a = INT_MAX, b = 1;
+    if (b > 0 && a > INT_MAX - b)
+        puts("addition would overflow");
+    else
+        printf("%d\n", a + b);
     return 0;
 }
-```
+~~~
 
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Common pitfalls
+Off-by-one errors, incorrect printf formats, array-to-pointer decay, string-buffer overflow, allocation-size multiplication overflow, signed/unsigned comparison bugs, use-after-free, double-free, and returning pointers to dead objects.
 
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
+## Safe allocation principle
+Before allocating n objects of size s, check that n <= SIZE_MAX / s.
 
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
-
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
-
-## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
-
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
-
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement checked add/multiply helpers and boundary tests for INT_MIN, INT_MAX, zero, and negative operands.
