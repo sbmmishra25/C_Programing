@@ -1,1 +1,73 @@
-# 03. Structure of a C Program\n\n## Learning objective\nBuild a strong understanding of headers, declarations, main, blocks, statements, expressions, and comments.\n\n## Definition / Concept\nStructure of a C Program is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Structure of a C Program");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 03. Structure of a C Program
+
+## 1. Basic structure
+A typical hosted C program contains preprocessing directives, declarations/definitions, functions, statements and expressions.
+
+```c
+#include <stdio.h>
+
+int add(int a, int b);
+
+int main(void) {
+    int result = add(10, 20);
+    printf("Result = %d\n", result);
+    return 0;
+}
+
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+Output:
+```
+Result = 30
+```
+
+## 2. Components
+- Header inclusion: supplies declarations such as `printf`.
+- Function prototype: tells the compiler the interface of `add`.
+- `main`: program entry point.
+- Local declaration: `int result`.
+- Function call: `add(10, 20)`.
+- Return statement: terminates the function and supplies its result.
+
+## 3. Comments
+```c
+// Single-line comment
+
+/*
+   Multi-line comment
+*/
+```
+
+Comments are ignored by the compiler after preprocessing and should explain intent, not merely restate syntax.
+
+## 4. Blocks and scope
+```c
+#include <stdio.h>
+
+int main(void) {
+    int x = 10;
+
+    {
+        int y = 20;
+        printf("%d %d\n", x, y);
+    }
+
+    printf("%d\n", x);
+    return 0;
+}
+```
+
+`y` is declared in the inner block and is not visible after that block.
+
+## Common mistakes
+- Missing prototypes.
+- Mismatching declaration and definition.
+- Using undeclared identifiers.
+- Writing `void main()` for a hosted program.
+- Confusing declaration with definition.
+
+## Practice
+Rewrite one large `main` function into three focused functions and create a header for their prototypes.
