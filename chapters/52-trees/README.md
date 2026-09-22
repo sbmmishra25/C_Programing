@@ -1,60 +1,54 @@
 # 52. Trees
 
-## Learning Objective
-Master Trees through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+A tree is a hierarchical, connected, acyclic structure. A binary tree has at most two children per node.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Trees, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example: traversals
+~~~c
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(void) {
-    puts("Trees");
-    return 0;
+typedef struct Node {
+    int key;
+    struct Node *left, *right;
+} Node;
+
+Node *node(int x) {
+    Node *n = malloc(sizeof *n);
+    if (!n) return NULL;
+    *n = (Node){x, NULL, NULL};
+    return n;
 }
-```
-
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
-
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
-
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
-
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
+void preorder(const Node *r) {
+    if (!r) return;
+    printf("%d ",r->key); preorder(r->left); preorder(r->right);
+}
+void inorder(const Node *r) {
+    if (!r) return;
+    inorder(r->left); printf("%d ",r->key); inorder(r->right);
+}
+void postorder(const Node *r) {
+    if (!r) return;
+    postorder(r->left); postorder(r->right); printf("%d ",r->key);
+}
+void destroy(Node *r) {
+    if (!r) return;
+    destroy(r->left); destroy(r->right); free(r);
+}
+int main(void) {
+    Node *r=node(1); if(!r) return 1;
+    r->left=node(2); r->right=node(3);
+    if(!r->left || !r->right){destroy(r);return 1;}
+    preorder(r); putchar('\n'); inorder(r); putchar('\n'); postorder(r); putchar('\n');
+    destroy(r);
+}
+~~~
 
 ## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
+Traversal is O(n). Recursive auxiliary stack is O(h), where h is tree height.
 
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
+## Key concepts
+Root, leaf, parent, child, depth, height, subtree, balanced tree, full/perfect/complete tree.
 
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement level-order traversal, height, node count, leaf count, and mirror transformation.
