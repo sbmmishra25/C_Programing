@@ -1,1 +1,51 @@
-# 13. Functions\n\n## Learning objective\nBuild a strong understanding of function declarations, definitions, prototypes, parameters, return values, and modular design.\n\n## Definition / Concept\nFunctions is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Functions");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 13. Functions
+
+## Definition
+A function is a named unit of code with a return type, parameter list, and body. A prototype declares its interface before use.
+
+## Complete example
+~~~c
+#include <stdio.h>
+#include <stddef.h>
+
+static int max2(int a, int b) {
+    return a > b ? a : b;
+}
+
+static void swap(int *a, int *b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+static int sum_array(const int a[], size_t n) {
+    int sum = 0;
+    for (size_t i = 0; i < n; ++i) sum += a[i];
+    return sum;
+}
+
+int main(void) {
+    int x = 4, y = 9;
+    printf("max = %d\n", max2(x, y));
+    swap(&x, &y);
+    printf("x=%d y=%d\n", x, y);
+
+    int a[] = {1,2,3,4};
+    printf("sum = %d\n", sum_array(a, sizeof a / sizeof a[0]));
+    return 0;
+}
+~~~
+
+## Core concepts
+C passes arguments by value. To modify caller-owned data, pass a pointer. Array parameters are adjusted to pointers, so a function receiving an array normally needs its length separately. Use const when the function promises not to modify the referenced data.
+
+A declaration and definition must have compatible types. A prototype such as void f(void) explicitly means no arguments; avoid old-style empty parameter lists in new code.
+
+## Return values and contracts
+Functions should clearly document what they return, what inputs are valid, whether pointers may be null, and who owns allocated memory.
+
+## Common mistakes
+Missing prototypes, incompatible declarations, returning a pointer to an automatic local object, hidden mutation, and ignored error/status returns.
+
+## Practice
+Write functions for GCD, prime testing, array reversal, matrix multiplication, binary search, and safe dynamic-array growth.
