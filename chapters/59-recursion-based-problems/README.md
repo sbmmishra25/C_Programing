@@ -1,60 +1,35 @@
 # 59. Recursion-Based Problems
 
-## Learning Objective
-Master Recursion-Based Problems through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Core pattern
+Identify the smallest valid input, define the recursive reduction, and prove that the reduction reaches the base case.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Recursion-Based Problems, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example: generate subsets
+~~~c
 #include <stdio.h>
+#define N 3
+
+void subsets(const int a[N], int i, int chosen[N]) {
+    if (i == N) {
+        putchar('{');
+        for (int j=0;j<N;j++) if(chosen[j]) printf(" %d",a[j]);
+        puts(" }");
+        return;
+    }
+    chosen[i]=0; subsets(a,i+1,chosen);
+    chosen[i]=1; subsets(a,i+1,chosen);
+}
 
 int main(void) {
-    puts("Recursion-Based Problems");
-    return 0;
+    int a[N]={1,2,3}, chosen[N]={0};
+    subsets(a,0,chosen);
 }
-```
-
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
-
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
-
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
-
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
+~~~
 
 ## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
+There are 2^n subsets, so generation requires O(n 2^n) output work and O(n) recursion depth.
 
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
+## Other important problems
+Permutations, combinations, Tower of Hanoi, merge sort, quicksort, tree traversals, maze solving, N-Queens, and backtracking search.
 
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+For each problem, state the recurrence, base case, depth, and time/space complexity.
