@@ -1,66 +1,37 @@
 # 67. Function Pointers & Callbacks
 
-## Learning Objective
-Master Function Pointers & Callbacks through concepts, syntax, complete C examples, testing, debugging, edge cases, and practical application.
+## Concept
+A callback is a function supplied to another function so that the callee can invoke caller-defined behavior.
 
-## Definition / Concept
-This chapter is part of the complete C curriculum and explains the exact rules, patterns, interfaces, and assumptions relevant to Function Pointers & Callbacks.
-
-## Why It Matters
-The goal is not to memorize code. It is to reason correctly about types, object lifetime, ownership, bounds, failure modes, portability, and complexity.
-
-## Detailed Explanation
-Move from terminology to a focused example, then to a complete implementation. Analyze normal cases, boundary cases, failure paths, and the trade-offs of the design. Distinguish ISO C behavior from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stddef.h>
 
-int main(void) {
-    puts("Function Pointers & Callbacks");
-    return 0;
+typedef void (*VisitFn)(int value, void *ctx);
+
+void visit_array(const int *a,size_t n,VisitFn visit,void *ctx){
+    if(!visit)return;
+    for(size_t i=0;i<n;i++) visit(a[i],ctx);
 }
-```
+void print_value(int value,void *ctx){
+    const char *label=ctx;
+    printf("%s%d\n",label,value);
+}
+int main(void){
+    int a[]={2,4,6};
+    visit_array(a,3,print_value,"value=");
+}
+~~~
 
-## Build and Test
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-./example
-```
-For debugging builds, where supported:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic -g -fsanitize=address,undefined example.c -o example
-```
+## Context pointers
+void *ctx lets the callback carry state without global variables. The API must guarantee that ctx remains valid for every callback invocation.
 
-## Expected Behavior
-The example should compile cleanly under the selected standard and demonstrate the intended concept. Document assumptions for platform-specific or input-dependent programs.
+## Applications
+qsort comparators, event systems, GUI callbacks, generic containers, parsers, and plugin interfaces.
 
-## Code Explanation
-Explain declarations, invariants, data flow, lifetime, ownership, cleanup, and the reasons behind boundary and error checks.
+## Common mistakes
+Incompatible callback signatures, invalid context lifetime, calling NULL callbacks, and hidden ownership assumptions.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O specifiers to actual argument types.
-- Check return values for failure-capable APIs.
-- Respect object, array, and string bounds.
-- Never dereference null or dangling pointers.
-- Never depend on undefined behavior.
-- Mark platform-specific interfaces explicitly.
-
-## Common Mistakes
-Typical errors include off-by-one logic, uninitialized values, unsafe conversion, memory leaks, double free, use-after-free, incorrect format strings, unchecked failure, and false portability assumptions.
-
-## Edge Cases
-Test empty input, zero/one, minimum/maximum values, duplicates, single-element data, capacity boundaries, failed operations, and malformed input where relevant.
-
-## Complexity
-For algorithmic work, include time, auxiliary space, preprocessing, worst-case bounds, and assumptions behind average-case claims. For projects, include performance goals and measurement strategy.
-
-## Practice / Exam / Interview Focus
-Implement multiple variants, explain the invariant or API contract, and debug a deliberately faulty version.
-
-## Advanced Extensions
-Add unit tests, integration tests, profiling, modular APIs, error propagation, CI, and portability documentation.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement filter/map/reduce-like functions for arrays and a command dispatcher using callback tables.
