@@ -1,66 +1,29 @@
 # 62. Competitive Programming Patterns
 
-## Learning Objective
-Master Competitive Programming Patterns through concepts, syntax, complete C examples, testing, debugging, edge cases, and practical application.
+## Core workflow
+Read constraints first, derive a target complexity, choose a representation, handle input/output efficiently, then test edge cases.
 
-## Definition / Concept
-This chapter is part of the complete C curriculum and explains the exact rules, patterns, interfaces, and assumptions relevant to Competitive Programming Patterns.
+## Essential patterns
+Prefix sums, difference arrays, two pointers, sliding window, binary search on answer, sorting + greedy, hash maps, monotonic stack/queue, BFS/DFS, shortest paths, union-find, heaps, coordinate compression, bitmasking, and DP.
 
-## Why It Matters
-The goal is not to memorize code. It is to reason correctly about types, object lifetime, ownership, bounds, failure modes, portability, and complexity.
-
-## Detailed Explanation
-Move from terminology to a focused example, then to a complete implementation. Analyze normal cases, boundary cases, failure paths, and the trade-offs of the design. Distinguish ISO C behavior from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example: prefix sums
+~~~c
 #include <stdio.h>
+#include <stddef.h>
 
-int main(void) {
-    puts("Competitive Programming Patterns");
-    return 0;
+int main(void){
+    int a[]={2,4,1,7,3};
+    size_t n=sizeof a/sizeof a[0];
+    long long pref[6]={0};
+    for(size_t i=0;i<n;i++) pref[i+1]=pref[i]+a[i];
+
+    size_t l=1,r=4; /* 1-based inclusive */
+    printf("%lld\n",pref[r]-pref[l-1]);
 }
-```
+~~~
 
-## Build and Test
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-./example
-```
-For debugging builds, where supported:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic -g -fsanitize=address,undefined example.c -o example
-```
+## Constraint thinking
+n around 10^2 may permit O(n²); n around 10^5 usually calls for O(n log n) or O(n); n around 10^9 often requires logarithmic, mathematical, or binary-search reasoning. These are heuristics, not universal rules.
 
-## Expected Behavior
-The example should compile cleanly under the selected standard and demonstrate the intended concept. Document assumptions for platform-specific or input-dependent programs.
-
-## Code Explanation
-Explain declarations, invariants, data flow, lifetime, ownership, cleanup, and the reasons behind boundary and error checks.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O specifiers to actual argument types.
-- Check return values for failure-capable APIs.
-- Respect object, array, and string bounds.
-- Never dereference null or dangling pointers.
-- Never depend on undefined behavior.
-- Mark platform-specific interfaces explicitly.
-
-## Common Mistakes
-Typical errors include off-by-one logic, uninitialized values, unsafe conversion, memory leaks, double free, use-after-free, incorrect format strings, unchecked failure, and false portability assumptions.
-
-## Edge Cases
-Test empty input, zero/one, minimum/maximum values, duplicates, single-element data, capacity boundaries, failed operations, and malformed input where relevant.
-
-## Complexity
-For algorithmic work, include time, auxiliary space, preprocessing, worst-case bounds, and assumptions behind average-case claims. For projects, include performance goals and measurement strategy.
-
-## Practice / Exam / Interview Focus
-Implement multiple variants, explain the invariant or API contract, and debug a deliberately faulty version.
-
-## Advanced Extensions
-Add unit tests, integration tests, profiling, modular APIs, error propagation, CI, and portability documentation.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Solve range-sum queries, longest subarray, interval scheduling, kth-element problems, DSU connectivity, and binary-search-on-answer problems.
