@@ -1,64 +1,52 @@
 # 21. Pointers & Arrays
 
-## Learning Objective
-Master Pointers & Arrays through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Core relationship
+In most expressions, an array name converts to a pointer to its first element. The array itself is not a pointer: sizeof(array) gives the whole array size while sizeof(pointer) gives pointer size.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Pointers & Arrays, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stddef.h>
+
+void print(const int *p, size_t n) {
+    for (size_t i = 0; i < n; ++i)
+        printf("%d ", p[i]);
+    putchar('\n');
+}
 
 int main(void) {
-    puts("Pointers & Arrays");
+    int a[] = {4, 1, 7, 2, 9};
+    size_t n = sizeof a / sizeof a[0];
+
+    print(a, n);
+    int *p = a;
+    printf("first=%d third=%d\n", *p, *(p + 2));
+
+    for (int *q = a + n; q != a; ) {
+        --q;
+        printf("%d ", *q);
+    }
+    putchar('\n');
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Array parameter forms
+int a[] and int *a as function parameters describe the same adjusted parameter type. The length is not carried with the pointer, so pass it explicitly.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+For multidimensional arrays, the pointer type must preserve the inner dimension, for example int (*p)[4].
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
+## Important notes
+- a[ i ] is defined in terms of pointer arithmetic: *(a+i).
+- Pointer traversal must stay within the same array object.
+- sizeof a works only while a is an actual array, not after parameter adjustment.
+- Use const when a function only reads the array.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
+## Common mistakes
+Treating int** as a substitute for int [rows][cols], losing the array length, and indexing beyond the allocation.
 
 ## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
+A full traversal is O(n) time and O(1) auxiliary space.
 
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement array copy, reverse, min/max, duplicate removal in a sorted array, and matrix traversal using pointer-to-array parameters.
