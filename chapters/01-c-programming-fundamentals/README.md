@@ -1,1 +1,79 @@
-# 01. C Programming Fundamentals\n\n## Learning objective\nBuild a strong understanding of what C is and how to write, compile, test, and debug basic programs.\n\n## Definition / Concept\nC Programming Fundamentals is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("C Programming Fundamentals");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 01. C Programming Fundamentals
+
+## 1. Concept
+C is a compiled, procedural, general-purpose language designed for efficient systems and application programming. It gives direct control over memory and data representation while remaining portable across many platforms.
+
+### Why learn C?
+C is used in operating systems, embedded systems, compilers, networking software, databases, device software, and performance-sensitive applications. Many higher-level languages and libraries are implemented partly in C.
+
+## 2. First program
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("Hello, C!\n");
+    return 0;
+}
+```
+
+### Explanation
+- `#include <stdio.h>` makes the declaration of `printf` available.
+- `main` is the entry point of a hosted C program.
+- `printf` writes formatted output to standard output.
+- `return 0` indicates successful termination to the environment.
+
+## 3. Variables and expressions
+```c
+#include <stdio.h>
+
+int main(void) {
+    int a = 15;
+    int b = 4;
+    int sum = a + b;
+    int remainder = a % b;
+
+    printf("sum = %d\n", sum);
+    printf("remainder = %d\n", remainder);
+    return 0;
+}
+```
+
+Output:
+```
+sum = 19
+remainder = 3
+```
+
+## 4. Program-development cycle
+1. Write source code.
+2. Preprocess included headers/macros.
+3. Compile and diagnose errors/warnings.
+4. Link object files and libraries.
+5. Execute.
+6. Test boundary cases.
+7. Debug and refactor.
+
+Compile with:
+```bash
+cc -std=c17 -Wall -Wextra -Wpedantic program.c -o program
+```
+
+## 5. Important rules
+- Local automatic variables are not automatically initialized.
+- C array indexing starts at zero.
+- Integer division discards the fractional part.
+- Compiler warnings should be treated seriously.
+- C performs no automatic array-bounds checking.
+
+## 6. Practice
+1. Read two integers and print sum, difference, product and quotient.
+2. Convert Celsius to Fahrenheit.
+3. Calculate simple interest.
+4. Find the largest of three integers.
+5. Explain source code, object code, executable, compiler and linker.
+
+## Common mistakes
+Using `void main()`, forgetting semicolons, using an uninitialized variable, using the wrong `printf` format, and ignoring warnings.
+
+## Complexity
+A constant-size arithmetic program is O(1) time and O(1) auxiliary space.
