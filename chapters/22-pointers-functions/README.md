@@ -1,64 +1,54 @@
 # 22. Pointers & Functions
 
-## Learning Objective
-Master Pointers & Functions through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Definition
+Pointers let functions read or modify caller-owned objects and represent optional outputs. C still uses pass-by-value: the pointer itself is copied, while both copies can designate the same object.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Pointers & Functions, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stdbool.h>
+
+bool divide(int a, int b, int *quotient, int *remainder) {
+    if (b == 0 || quotient == NULL || remainder == NULL)
+        return false;
+    *quotient = a / b;
+    *remainder = a % b;
+    return true;
+}
 
 int main(void) {
-    puts("Pointers & Functions");
+    int q, r;
+    if (!divide(17, 5, &q, &r)) {
+        fprintf(stderr, "division failed\n");
+        return 1;
+    }
+    printf("q=%d r=%d\n", q, r);
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Output parameters
+Output pointers are useful when a function needs to return multiple results. Document whether each pointer may be NULL and whether the function writes through it.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## const correctness
+A parameter such as const int *input promises not to modify the referenced integer through that pointer. This allows read-only data to be passed safely.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
+## Pointer-to-pointer
+Use T ** when the function must modify a caller's T *:
+~~~c
+bool allocate_int(int **out) {
+    if (!out) return false;
+    int *p = malloc(sizeof *p);
+    if (!p) return false;
+    *p = 42;
+    *out = p;
+    return true;
+}
+~~~
+The caller owns the returned allocation and must eventually free it.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
+## Common mistakes
+Passing an uninitialized pointer instead of its address, dereferencing NULL, returning pointers to local objects, and failing to document ownership.
 
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement swap, safe string duplication, dynamic-array growth, linked-list insertion, and a function that returns both minimum and maximum.
