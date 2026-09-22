@@ -1,66 +1,34 @@
 # 68. C Libraries & Reusable APIs
 
-## Learning Objective
-Master C Libraries & Reusable APIs through concepts, syntax, complete C examples, testing, debugging, edge cases, and practical application.
+## Concept
+A reusable C library separates public contracts from private implementation and provides predictable naming, error handling, ownership, and build integration.
 
-## Definition / Concept
-This chapter is part of the complete C curriculum and explains the exact rules, patterns, interfaces, and assumptions relevant to C Libraries & Reusable APIs.
+## API example
+~~~c
+/* buffer.h */
+#ifndef BUFFER_H
+#define BUFFER_H
+#include <stddef.h>
+typedef struct Buffer Buffer;
+Buffer *buffer_create(size_t capacity);
+void buffer_destroy(Buffer *);
+int buffer_append(Buffer *, const void *, size_t);
+const unsigned char *buffer_data(const Buffer *);
+size_t buffer_size(const Buffer *);
+#endif
+~~~
 
-## Why It Matters
-The goal is not to memorize code. It is to reason correctly about types, object lifetime, ownership, bounds, failure modes, portability, and complexity.
+## API design rules
+Use opaque types when representation should remain private. Prefix public symbols to reduce collisions. Document ownership, thread safety, nullability, error reporting, complexity, and lifetime.
 
-## Detailed Explanation
-Move from terminology to a focused example, then to a complete implementation. Analyze normal cases, boundary cases, failure paths, and the trade-offs of the design. Distinguish ISO C behavior from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
+## Static library
+A typical Unix-like workflow is:
+~~~sh
+cc -c buffer.c
+ar rcs libbuffer.a buffer.o
+cc main.c -L. -lbuffer -o app
+~~~
+Exact commands vary by platform.
 
-## Complete C Example
-```c
-#include <stdio.h>
-
-int main(void) {
-    puts("C Libraries & Reusable APIs");
-    return 0;
-}
-```
-
-## Build and Test
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-./example
-```
-For debugging builds, where supported:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic -g -fsanitize=address,undefined example.c -o example
-```
-
-## Expected Behavior
-The example should compile cleanly under the selected standard and demonstrate the intended concept. Document assumptions for platform-specific or input-dependent programs.
-
-## Code Explanation
-Explain declarations, invariants, data flow, lifetime, ownership, cleanup, and the reasons behind boundary and error checks.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O specifiers to actual argument types.
-- Check return values for failure-capable APIs.
-- Respect object, array, and string bounds.
-- Never dereference null or dangling pointers.
-- Never depend on undefined behavior.
-- Mark platform-specific interfaces explicitly.
-
-## Common Mistakes
-Typical errors include off-by-one logic, uninitialized values, unsafe conversion, memory leaks, double free, use-after-free, incorrect format strings, unchecked failure, and false portability assumptions.
-
-## Edge Cases
-Test empty input, zero/one, minimum/maximum values, duplicates, single-element data, capacity boundaries, failed operations, and malformed input where relevant.
-
-## Complexity
-For algorithmic work, include time, auxiliary space, preprocessing, worst-case bounds, and assumptions behind average-case claims. For projects, include performance goals and measurement strategy.
-
-## Practice / Exam / Interview Focus
-Implement multiple variants, explain the invariant or API contract, and debug a deliberately faulty version.
-
-## Advanced Extensions
-Add unit tests, integration tests, profiling, modular APIs, error propagation, CI, and portability documentation.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Create a reusable vector or string library with tests, documentation, semantic versioning, and a stable public header.
