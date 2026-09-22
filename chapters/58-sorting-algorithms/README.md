@@ -1,60 +1,45 @@
 # 58. Sorting Algorithms
 
-## Learning Objective
-Master Sorting Algorithms through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Comparison overview
+Bubble: O(n²), stable, in-place.
+Selection: O(n²), generally not stable, in-place.
+Insertion: O(n²) worst, O(n) best on nearly sorted data, stable.
+Merge: O(n log n), stable, O(n) auxiliary array.
+Quick: O(n log n) average, O(n²) worst with poor pivots, typically in-place apart from recursion stack.
+Heap: O(n log n), in-place, not stable.
+Shell: gap-based; performance depends on sequence.
+Counting: O(n+k) for bounded integer keys, not comparison-based.
+Radix: O(d(n+k)) for suitable fixed-digit keys.
+Bucket: expected near O(n+k) under distribution assumptions.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Sorting Algorithms, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
-#include <stdio.h>
-
-int main(void) {
-    puts("Sorting Algorithms");
-    return 0;
+## Complete insertion sort
+~~~c
+void insertion_sort(int *a,size_t n){
+    for(size_t i=1;i<n;i++){
+        int key=a[i];
+        size_t j=i;
+        while(j>0 && a[j-1]>key){a[j]=a[j-1];--j;}
+        a[j]=key;
+    }
 }
-```
+~~~
 
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Merge-sort skeleton
+~~~c
+/* recursively split, sort halves, then merge into temporary storage */
+~~~
 
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
+## Quick-sort caution
+A comparator for qsort should not return a-b because integer subtraction can overflow. Use:
+~~~c
+int cmp_int(const void *pa,const void *pb){
+    int a=*(const int*)pa,b=*(const int*)pb;
+    return (a>b)-(a<b);
+}
+~~~
 
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
+## Choosing an algorithm
+Consider stability, memory, data distribution, key range, worst-case guarantees, and whether input is already nearly sorted.
 
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
-
-## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
-
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
-
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement all comparison sorts above, then benchmark them on random, sorted, reverse-sorted, and duplicate-heavy arrays.
