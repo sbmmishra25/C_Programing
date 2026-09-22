@@ -1,64 +1,51 @@
 # 33. File Handling
 
-## Learning Objective
-Master File Handling through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+ISO C provides streams through FILE* and functions such as fopen, fclose, fread, fwrite, fgets, fputs, fprintf, fscanf, fseek, ftell, and fflush.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for File Handling, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example: text file
+~~~c
 #include <stdio.h>
 
 int main(void) {
-    puts("File Handling");
+    const char *name = "students.txt";
+    FILE *fp = fopen(name, "w");
+    if (!fp) {
+        perror("fopen");
+        return 1;
+    }
+
+    if (fprintf(fp, "101 Asha 91.5\n102 Ravi 88.0\n") < 0) {
+        perror("write");
+        fclose(fp);
+        return 1;
+    }
+    if (fclose(fp) != 0) {
+        perror("fclose");
+        return 1;
+    }
+
+    fp = fopen(name, "r");
+    if (!fp) { perror("fopen"); return 1; }
+
+    char line[128];
+    while (fgets(line, sizeof line, fp))
+        fputs(line, stdout);
+
+    if (ferror(fp)) perror("read");
+    fclose(fp);
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Binary I/O
+fread/fwrite operate on bytes/objects. Binary representation is not automatically portable between different architectures or C implementations because of padding, endianness, type sizes, and representation.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
-
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
+## Common mistakes
+Not checking fopen, using feof as the loop condition, failing to close files, assuming text/binary formats are universally identical, and ignoring short reads/writes.
 
 ## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
+Sequential processing is O(n) in file size; seeking depends on the stream and implementation.
 
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Build a CSV-like record reader, a binary record store, and a file-copy utility with complete error checks.
