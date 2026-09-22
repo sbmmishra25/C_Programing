@@ -1,60 +1,44 @@
 # 53. Binary Search Trees
 
-## Learning Objective
-Master Binary Search Trees through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Property
+For a BST, keys in the left subtree are ordered before the node key and keys in the right subtree after it, according to the chosen duplicate policy.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Binary Search Trees, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, complexity, and failure behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases, complexity, and failure modes. Distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, OS-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete insertion/search
+~~~c
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(void) {
-    puts("Binary Search Trees");
+typedef struct Node { int key; struct Node *left,*right; } Node;
+
+Node *insert(Node *r,int x) {
+    if(!r) {
+        r=malloc(sizeof *r);
+        if(!r) return NULL;
+        *r=(Node){x,NULL,NULL}; return r;
+    }
+    if(x < r->key) r->left=insert(r->left,x);
+    else if(x > r->key) r->right=insert(r->right,x);
+    return r;
+}
+int contains(const Node *r,int x) {
+    while(r) {
+        if(x==r->key) return 1;
+        r=(x<r->key)?r->left:r->right;
+    }
     return 0;
 }
-```
+void inorder(const Node *r){if(r){inorder(r->left);printf("%d ",r->key);inorder(r->right);}}
+void destroy(Node *r){if(r){destroy(r->left);destroy(r->right);free(r);}}
 
-## Compile
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
-
-## Expected Behavior
-The example should compile cleanly and demonstrate the chapter concept. Algorithms must include stated input assumptions and complexity.
-
-## Code Explanation
-Explain declarations, control flow, invariants, lifetime, ownership, and cleanup.
-
-## Important Notes
-- Enable warnings.
-- Match formatted-I/O types.
-- Respect object bounds.
-- Check failure-returning APIs.
-- Never rely on undefined behavior.
-- Mark platform-specific APIs.
-
-## Common Mistakes
-Off-by-one errors, wrong conversions, uninitialized data, unchecked results, invalid pointer lifetime, memory leaks, and non-portable assumptions.
-
-## Edge Cases
-Test empty input, zero/one, min/max values, duplicates, single-element data, and failure paths.
+int main(void){
+    int a[]={8,3,10,1,6,14,4,7,13}; Node *r=NULL;
+    for(size_t i=0;i<sizeof a/sizeof a[0];++i){Node *nr=insert(r,a[i]);if(!nr){destroy(r);return 1;}r=nr;}
+    inorder(r); putchar('\n'); printf("contains 7: %d\n",contains(r,7)); destroy(r);
+}
+~~~
 
 ## Complexity
-For algorithms, state time, auxiliary space, preprocessing, worst case, and assumptions behind average-case behavior.
+Search/insert are O(h). Balanced BST: O(log n) expected height; a degenerate tree can reach O(n).
 
-## Practice / Exam / Interview Focus
-Implement multiple variations, debug one faulty version, and explain the main invariant or contract.
-
-## Advanced Extensions
-Add tests, profiling, modular interfaces, error propagation, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Implement deletion, predecessor/successor, height, validation of the BST invariant, and iterative traversals.
