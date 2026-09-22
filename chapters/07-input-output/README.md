@@ -1,1 +1,54 @@
-# 07. Input & Output\n\n## Learning objective\nBuild a strong understanding of standard streams, formatted I/O, line input, buffering, and return values.\n\n## Definition / Concept\nInput & Output is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Input & Output");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 07. Input & Output
+
+## 1. Standard streams
+C provides `stdin`, `stdout`, and `stderr`.
+
+Output:
+```c
+printf("Value = %d\n", 42);
+fprintf(stderr, "Diagnostic message\n");
+```
+
+## 2. Safe line input
+For text input, `fgets` is usually easier to bound safely than an unrestricted `scanf("%s", ...)`.
+
+```c
+#include <stdio.h>
+
+int main(void) {
+    char name[50];
+
+    printf("Enter name: ");
+    if (fgets(name, sizeof name, stdin) == NULL) {
+        fprintf(stderr, "Input failed\n");
+        return 1;
+    }
+
+    printf("Hello, %s", name);
+    return 0;
+}
+```
+
+## 3. Formatted input
+If using `scanf`, check its return value and constrain string widths:
+```c
+int age;
+if (scanf("%d", &age) != 1) {
+    fprintf(stderr, "Invalid integer\n");
+    return 1;
+}
+```
+
+## 4. Output formatting
+```c
+printf("%d\n", 42);
+printf("%.2f\n", 3.14159);
+printf("%zu\n", sizeof(int));
+printf("%s\n", "C");
+```
+
+## Common mistakes
+Wrong format specifiers, unchecked input, buffer overflow, and mixing `scanf` and `fgets` without understanding buffered input.
+
+## Practice
+Write a menu that reads a complete line, validates it, and performs an operation.
