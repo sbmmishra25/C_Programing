@@ -1,64 +1,48 @@
 # 31. Header Files
 
-## Learning Objective
-Master Header Files through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+A header declares interfaces shared by translation units. It commonly contains function prototypes, type definitions, macros, and constants; definitions of non-inline objects should generally not be duplicated in headers.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Header Files, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
+## Include guards
+~~~c
+#ifndef MATH_UTIL_H
+#define MATH_UTIL_H
 
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
+int add(int a, int b);
 
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
+#endif
+~~~
+The guard prevents repeated inclusion within one translation unit.
 
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
+/* math_util.h */
+#ifndef MATH_UTIL_H
+#define MATH_UTIL_H
+int add(int a, int b);
+#endif
+~~~
+~~~c
+/* math_util.c */
+#include "math_util.h"
+int add(int a, int b) { return a + b; }
+~~~
+~~~c
+/* main.c */
 #include <stdio.h>
-
+#include "math_util.h"
 int main(void) {
-    puts("Header Files");
+    printf("%d\n", add(4, 5));
     return 0;
 }
-```
+~~~
+Build with: `cc -std=c17 -Wall -Wextra -Wpedantic main.c math_util.c -o app`.
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Important notes
+Use angle brackets for implementation/library headers and quotes for project headers by convention. Headers are textually included by the preprocessor; they are not independently linked modules.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Common mistakes
+Defining ordinary global objects in a header, missing guards, circular dependencies, incompatible declarations, and relying on include order.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Create a reusable vector.h/vector.c pair and expose only the intended public API.
