@@ -1,1 +1,60 @@
-# 12. break, continue & goto\n\n## Learning objective\nBuild a strong understanding of break, continue, goto, structured exits, and cleanup paths.\n\n## Definition / Concept\nbreak, continue & goto is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("break, continue & goto");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 12. break, continue & goto
+
+## Definition
+break terminates the nearest loop or switch. continue skips the remainder of the current loop iteration. goto transfers control to a label in the same function.
+
+## Complete example
+~~~c
+#include <stdio.h>
+
+int main(void) {
+    for (int i = 1; i <= 10; ++i) {
+        if (i == 3) continue;
+        if (i == 8) break;
+        printf("%d ", i);
+    }
+    putchar('\n');
+
+    int value = -1;
+    if (value < 0) goto cleanup;
+
+    printf("value = %d\n", value);
+
+cleanup:
+    puts("cleanup path reached");
+    return 0;
+}
+~~~
+
+## Output
+The loop prints 1 2 4 5 6 7. The cleanup label is reached because value is negative.
+
+## Structured cleanup
+In C, goto can be useful for one cleanup path when several resources may have been acquired:
+~~~c
+int result = -1;
+FILE *fp = fopen("data.txt", "r");
+if (!fp) goto cleanup;
+
+char *buf = malloc(1024);
+if (!buf) goto close_file;
+
+/* work */
+result = 0;
+free(buf);
+
+close_file:
+fclose(fp);
+cleanup:
+return result;
+~~~
+Each cleanup action must correspond to a resource that was actually acquired.
+
+## Common mistakes
+Using goto for ordinary branching, creating spaghetti control flow, forgetting that break affects only the nearest loop or switch, and using continue in a way that skips required progress.
+
+## Complexity
+These statements do not inherently change complexity; the surrounding algorithm determines it.
+
+## Practice
+Implement an early-exit search, a validation loop using continue, and a multi-resource cleanup routine.
