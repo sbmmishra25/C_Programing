@@ -1,1 +1,57 @@
-# 11. Loops\n\n## Learning objective\nBuild a strong understanding of for, while, do-while, termination, invariants, and nested loops.\n\n## Definition / Concept\nLoops is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Loops");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 11. Loops
+
+## Definition
+A loop repeats a statement or block while a controlling condition remains true. C provides while, do...while, and for.
+
+## Why it matters
+Loops are the foundation of traversal, repeated input, simulation, searching, and numerical algorithms. Correct loop design depends on initialization, condition, progress, and a clear termination argument.
+
+## Syntax
+~~~c
+while (condition) { /* body */ }
+do { /* body */ } while (condition);
+for (initialization; condition; update) { /* body */ }
+~~~
+
+## Complete example
+~~~c
+#include <stdio.h>
+
+int main(void) {
+    int n;
+    if (scanf("%d", &n) != 1 || n < 0) {
+        fprintf(stderr, "Enter a non-negative integer.\n");
+        return 1;
+    }
+
+    long long sum = 0;
+    for (int i = 1; i <= n; ++i) sum += i;
+
+    unsigned long long fact = 1;
+    for (int i = 2; i <= n; ++i) fact *= (unsigned)i;
+
+    printf("sum = %lld\n", sum);
+    printf("factorial = %llu\n", fact);
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= i; ++j) putchar('*');
+        putchar('\n');
+    }
+    return 0;
+}
+~~~
+
+## Explanation and complexity
+The first loop computes 1+...+n in O(n). The factorial loop is O(n), although the result can overflow for sufficiently large n. The nested pattern is O(n²) time and O(1) auxiliary space. Every loop should have a clear progress variable or termination argument.
+
+## while vs do...while
+while may execute zero times. do...while executes at least once, making it useful for menus and validation.
+
+## Common mistakes
+Off-by-one errors, infinite loops, stale variables, unsigned decrement wraparound, and accidental nested O(n²) work.
+
+## Practice
+Print primes to n; reverse an integer; compute GCD; print a multiplication table; find an array maximum.
+
+## Interview focus
+Explain loop invariants, termination, nested-loop complexity, and the difference between pre-test and post-test loops.
