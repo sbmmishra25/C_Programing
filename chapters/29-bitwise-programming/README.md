@@ -1,64 +1,42 @@
 # 29. Bitwise Programming
 
-## Learning Objective
-Master Bitwise Programming through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Definition
+Bitwise operators manipulate the bits of integer operands: &, |, ^, ~, <<, and >>. They are essential for flags, masks, packed fields, protocols, and low-level algorithms.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Bitwise Programming, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Complete example
+~~~c
 #include <stdio.h>
+#include <stdint.h>
+
+#define READ_FLAG  (UINT8_C(1) << 0)
+#define WRITE_FLAG (UINT8_C(1) << 1)
+#define EXEC_FLAG  (UINT8_C(1) << 2)
 
 int main(void) {
-    puts("Bitwise Programming");
+    uint8_t flags = 0;
+
+    flags |= READ_FLAG;
+    flags |= WRITE_FLAG;
+
+    printf("read=%s\n", (flags & READ_FLAG) ? "yes" : "no");
+    printf("execute=%s\n", (flags & EXEC_FLAG) ? "yes" : "no");
+
+    flags &= (uint8_t)~WRITE_FLAG;
+    flags ^= EXEC_FLAG;
+
+    printf("flags=0x%02X\n", flags);
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Core patterns
+Set a bit with x |= mask; clear it with x &= ~mask; toggle it with x ^= mask; test it with x & mask.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Shift safety
+Use unsigned integer types for predictable bit manipulation. Avoid shifting by a negative amount or by a count greater than or equal to the width of the promoted left operand. Left-shifting signed values can introduce undefined behavior in cases involving unrepresentable results.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
+## Common mistakes
+Operator-precedence errors, signed shifts, incorrect mask widths, and using bitwise operators when logical && or || was intended.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Count set bits, test power of two, reverse bits, extract bit fields, build permission flags, and implement a compact set representation.
