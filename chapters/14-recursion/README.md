@@ -1,1 +1,39 @@
-# 14. Recursion\n\n## Learning objective\nBuild a strong understanding of base cases, recursive reduction, call stack, termination, and recursive complexity.\n\n## Definition / Concept\nRecursion is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Recursion");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 14. Recursion
+
+## Definition
+Recursion solves a problem by calling the same function on a smaller instance until a base case is reached.
+
+## Requirements
+A correct recursive design needs a base case, a recursive case that reduces the problem, and a termination argument.
+
+## Complete example
+~~~c
+#include <stdio.h>
+
+unsigned long long factorial(unsigned n) {
+    if (n <= 1) return 1;
+    return (unsigned long long)n * factorial(n - 1);
+}
+
+unsigned gcd(unsigned a, unsigned b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+
+int main(void) {
+    printf("5! = %llu\n", factorial(5));
+    printf("gcd(84,30) = %u\n", gcd(84,30));
+    return 0;
+}
+~~~
+
+## Call stack and complexity
+Each active call requires stack storage. Factorial takes O(n) time and O(n) stack space. Euclid's GCD takes O(log min(a,b)) calls.
+
+Recursion is natural for trees, divide-and-conquer, backtracking, and recursively defined structures. Iteration is often preferable for simple repetition or very deep input because it can use O(1) auxiliary stack space.
+
+## Common mistakes
+Missing base cases, non-decreasing recursive arguments, exponential recomputation, and excessive recursion depth.
+
+## Practice
+Implement Tower of Hanoi, recursive binary search, merge sort, tree traversals, permutations, subsets, and maze backtracking.
