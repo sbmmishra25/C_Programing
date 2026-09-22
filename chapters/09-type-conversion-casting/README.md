@@ -1,1 +1,56 @@
-# 09. Type Conversion & Casting\n\n## Learning objective\nBuild a strong understanding of implicit conversions, integer promotions, usual arithmetic conversions, and explicit casts.\n\n## Definition / Concept\nType Conversion & Casting is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Type Conversion & Casting");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 09. Type Conversion & Casting
+
+## 1. Implicit conversion
+C converts operands according to its type rules.
+
+```c
+int a = 5;
+int b = 2;
+double x = a / b;
+```
+
+Here `a / b` is integer division first, so `x` becomes `2.0`.
+
+## 2. Explicit cast
+```c
+double x = (double)a / b;
+```
+
+Now the result is `2.5`.
+
+## Complete example
+```c
+#include <stdio.h>
+
+int main(void) {
+    int total = 7;
+    int count = 2;
+
+    printf("integer average = %d\n", total / count);
+    printf("real average = %.2f\n", (double)total / count);
+    return 0;
+}
+```
+
+Output:
+```
+integer average = 3
+real average = 3.50
+```
+
+## 3. Narrowing
+```c
+double value = 123.987;
+int n = (int)value;
+```
+
+The fractional part is discarded during floating-to-integer conversion when the result is representable.
+
+## 4. Pointer casts
+Do not cast pointers simply to silence a warning. Alignment, object type, lifetime, aliasing and representation rules still apply.
+
+## Common mistakes
+Casting after integer division, assuming a cast prevents overflow, mixing signed and unsigned types without analysis, and using pointer casts as a universal solution.
+
+## Practice
+Predict the results of mixed `int`, `unsigned`, `float`, and `double` expressions before compiling them.
