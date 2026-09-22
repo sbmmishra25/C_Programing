@@ -1,1 +1,37 @@
-# 20. Pointer Arithmetic\n\n## Learning objective\nBuild a strong understanding of defined addition, subtraction, comparison, and array-bounded pointer arithmetic.\n\n## Definition / Concept\nPointer Arithmetic is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Pointer Arithmetic");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 20. Pointer Arithmetic
+
+## Definition
+For a pointer into an array, adding an integer moves by elements rather than raw bytes. Subtracting two pointers into the same array produces a ptrdiff_t distance.
+
+## Complete example
+~~~c
+#include <stdio.h>
+#include <stddef.h>
+
+int main(void) {
+    int a[] = {10,20,30,40};
+    size_t n = sizeof a / sizeof a[0];
+
+    for (int *p = a; p < a + n; ++p)
+        printf("%d\n", *p);
+
+    ptrdiff_t d = &a[3] - &a[0];
+    printf("distance=%td\n", d);
+    return 0;
+}
+~~~
+
+## Rules
+For an array of n elements, a+i is valid for 0 <= i <= n when used as a pointer value; a+n is one-past and must not be dereferenced. Pointer subtraction is defined only for pointers into the same array object (or one-past it), and the result must be representable as ptrdiff_t.
+
+## Why pointer arithmetic is type-aware
+If p is int*, p+1 advances by one int, conceptually by sizeof(int) bytes. This differs from adding one to a char*.
+
+## Common mistakes
+Subtracting unrelated pointers, dereferencing one-past pointers, manually treating typed pointers as byte addresses without a valid reason, and performing arithmetic outside the permitted array domain.
+
+## Complexity
+Sequential traversal is O(n) time and O(1) auxiliary space.
+
+## Practice
+Reverse an array using two pointers, locate a value, implement bounded pointer-based strlen, and explain pointer difference versus byte difference.
