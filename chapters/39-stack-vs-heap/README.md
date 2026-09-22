@@ -1,64 +1,37 @@
 # 39. Stack vs Heap
 
-## Learning Objective
-Master Stack vs Heap through definitions, syntax, complete C examples, testing, debugging, edge cases, and practical applications.
+## Concept
+Automatic objects commonly use implementation-managed storage associated with function/block execution; dynamically allocated objects use the allocation facilities and have explicitly controlled lifetime. The terms stack and heap describe common implementations, not complete ISO C categories.
 
-## Definition / Concept
-This chapter explains the formal C language or library rules for Stack vs Heap, why the construct exists, and how it interacts with types, objects, memory, lifetime, control flow, and interfaces.
-
-## Why It Matters
-Correct C programming depends on precise reasoning about object bounds, lifetime, ownership, conversions, and failure behavior.
-
-## Syntax / Core Pattern
-Use standard C syntax appropriate to the selected language mode. Prefer explicit, readable code and interfaces that document ownership, mutation, and error behavior.
-
-## Detailed Explanation
-Study the rule first, then a minimal example, then a complete implementation. Analyze edge cases and distinguish ISO C guarantees from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Example
+~~~c
 #include <stdio.h>
+#include <stdlib.h>
+
+void demo(void) {
+    int local = 10;
+    int *dynamic = malloc(sizeof *dynamic);
+    if (!dynamic) return;
+
+    *dynamic = 20;
+    printf("local=%d dynamic=%d\n", local, *dynamic);
+    free(dynamic);
+}
 
 int main(void) {
-    puts("Stack vs Heap");
+    demo();
     return 0;
 }
-```
+~~~
 
-Compile:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-```
+## Lifetime
+The local object's lifetime ends when its execution block ends. The allocated object's lifetime ends when free is called, unless allocation failure occurs first.
 
-## Expected Behavior
-The program should compile cleanly under the selected standard and demonstrate the concept. Input, I/O, allocation, and platform-sensitive chapters should document failure cases.
+## Comparison
+Automatic storage is convenient and usually fast but has scope/lifetime constraints. Dynamic storage supports variable-size data and longer lifetimes but requires explicit ownership and release.
 
-## Code Explanation
-Explain the declarations, data flow, control flow, lifetime, ownership, and invariants. Explain why every bound and return-value check exists.
+## Common mistakes
+Returning pointers to locals, leaking allocations, double-free, use-after-free, and assuming every large object must be heap allocated.
 
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O types correctly.
-- Respect array and string bounds.
-- Never dereference null or dangling pointers.
-- Check functions that can fail.
-- Do not rely on undefined behavior.
-- Mark non-ISO platform APIs explicitly.
-
-## Common Mistakes
-Off-by-one errors, wrong types, invalid conversions, uninitialized data, unchecked allocation or I/O, leaks, double frees, use-after-free, missing null termination, and portability assumptions.
-
-## Edge Cases
-Test empty and zero-sized cases, one-element data, minimum/maximum values, duplicates, full-capacity states, failed operations, and all valid boundary indices.
-
-## Complexity
-For algorithms, record time, auxiliary space, preprocessing, worst-case behavior, and assumptions behind average-case results.
-
-## Practice / Exam / Interview Focus
-Implement several variations, debug one faulty implementation, and explain the main invariant or contract.
-
-## Advanced Extensions
-Connect this topic to related chapters and extend the implementation with tests, modular APIs, performance measurements, and portability notes.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Compare a fixed array, a VLA where supported by the selected C standard/compiler, and a malloc-based dynamic array. Measure behavior rather than assuming an optimization outcome.
