@@ -1,66 +1,25 @@
 # 69. C11, C17 & C23 Features
 
-## Learning Objective
-Master C11, C17 & C23 Features through concepts, syntax, complete C examples, testing, debugging, edge cases, and practical application.
+## C11
+C11 introduced standardized atomics, threads, _Generic, _Static_assert, _Alignas/_Alignof, _Thread_local, anonymous structures/unions, and other library/language improvements.
 
-## Definition / Concept
-This chapter is part of the complete C curriculum and explains the exact rules, patterns, interfaces, and assumptions relevant to C11, C17 & C23 Features.
+## C17
+C17 is mainly a corrective revision of C11. It is important for modern portable C, but it intentionally added few headline language features.
 
-## Why It Matters
-The goal is not to memorize code. It is to reason correctly about types, object lifetime, ownership, bounds, failure modes, portability, and complexity.
+## C23
+C23 modernizes C with features including nullptr/nullptr_t, standard boolean keywords, binary integer constants, digit separators, attributes, improved enumeration support, and other language/library changes. Actual compiler support varies.
 
-## Detailed Explanation
-Move from terminology to a focused example, then to a complete implementation. Analyze normal cases, boundary cases, failure paths, and the trade-offs of the design. Distinguish ISO C behavior from implementation-defined, unspecified, undefined, compiler-specific, operating-system-specific, and architecture-specific behavior.
-
-## Complete C Example
-```c
+## Feature detection
+~~~c
 #include <stdio.h>
-
 int main(void) {
-    puts("C11, C17 & C23 Features");
-    return 0;
+#ifdef __STDC_VERSION__
+    printf("STDC_VERSION=%ld\n", (long)__STDC_VERSION__);
+#endif
 }
-```
+~~~
 
-## Build and Test
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic example.c -o example
-./example
-```
-For debugging builds, where supported:
-```bash
-cc -std=c17 -Wall -Wextra -Wpedantic -g -fsanitize=address,undefined example.c -o example
-```
+Compile explicitly, for example: `cc -std=c17 -Wall -Wextra -Wpedantic file.c`. Test C23 with `-std=c23` only when your compiler supports it.
 
-## Expected Behavior
-The example should compile cleanly under the selected standard and demonstrate the intended concept. Document assumptions for platform-specific or input-dependent programs.
-
-## Code Explanation
-Explain declarations, invariants, data flow, lifetime, ownership, cleanup, and the reasons behind boundary and error checks.
-
-## Important Notes
-- Enable compiler warnings.
-- Match formatted-I/O specifiers to actual argument types.
-- Check return values for failure-capable APIs.
-- Respect object, array, and string bounds.
-- Never dereference null or dangling pointers.
-- Never depend on undefined behavior.
-- Mark platform-specific interfaces explicitly.
-
-## Common Mistakes
-Typical errors include off-by-one logic, uninitialized values, unsafe conversion, memory leaks, double free, use-after-free, incorrect format strings, unchecked failure, and false portability assumptions.
-
-## Edge Cases
-Test empty input, zero/one, minimum/maximum values, duplicates, single-element data, capacity boundaries, failed operations, and malformed input where relevant.
-
-## Complexity
-For algorithmic work, include time, auxiliary space, preprocessing, worst-case bounds, and assumptions behind average-case claims. For projects, include performance goals and measurement strategy.
-
-## Practice / Exam / Interview Focus
-Implement multiple variants, explain the invariant or API contract, and debug a deliberately faulty version.
-
-## Advanced Extensions
-Add unit tests, integration tests, profiling, modular APIs, error propagation, CI, and portability documentation.
-
-## Related Topics
-See [INDEX.md](../../INDEX.md).
+## Practice
+Create a compatibility table for your compiler, compile representative C11/C17/C23 programs, and document unsupported features rather than silently relying on extensions.
