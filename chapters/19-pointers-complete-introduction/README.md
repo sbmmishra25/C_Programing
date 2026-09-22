@@ -1,1 +1,37 @@
-# 19. Pointers: Complete Introduction\n\n## Learning objective\nBuild a strong understanding of addresses, pointer types, dereference, null pointers, and pointer correctness.\n\n## Definition / Concept\nPointers: Complete Introduction is a core part of C programming. Study its language rules, practical purpose, implementation patterns, and relationship to types, object lifetime, control flow, libraries, and program design.\n\n## Why it matters\nC requires explicit reasoning about types, bounds, storage, ownership, lifetime, and failure. Mastering this topic supports portable, maintainable, testable software.\n\n## Syntax / Core pattern\nLearn the exact syntax for the construct and use clear names, braces, explicit conversions where justified, and interfaces that document mutation and ownership.\n\n## Detailed explanation\nStart from the language rule, then connect it to a small program, then analyze edge cases and failure modes. Where behavior is implementation-defined, unspecified, undefined, or platform-specific, label the distinction explicitly.\n\n## Proper examples\n### Example 1 — Minimal compilable program\n```\n#include <stdio.h>\n\nint main(void) {\n    puts("Pointers: Complete Introduction");\n    return 0;\n}\n```\n\nCompile with:\n```\ncc -std=c17 -Wall -Wextra -Wpedantic example.c -o example\n```\n\n### Example 2 — Focused implementation\nWrite a complete example centered on the rule in this chapter. Include normal cases, boundary cases, and explicit error handling where relevant.\n\n## Expected behavior\nThe example should compile cleanly under the chosen language mode and demonstrate the stated rule. Input-driven or platform-specific programs must document assumptions and failure cases.\n\n## Code explanation\nExplain the headers, declarations, data flow, control flow, lifetime/ownership, and why each boundary check exists.\n\n## Important notes\n- Compile with warnings enabled.\n- Use the correct formatted-I/O conversion specifier for every argument.\n- Never rely on undefined behavior for correctness.\n- Check allocation and I/O results when the API can fail.\n- Keep array/string accesses within valid object bounds.\n- Label POSIX, Windows, compiler, or architecture-specific code clearly.\n\n## Common mistakes\nWatch for off-by-one errors, uninitialized values, wrong types, unchecked return values, buffer overflow, invalid lifetime assumptions, memory leaks, accidental fall-through, and non-portable implementation assumptions.\n\n## Edge cases\nTest zero, empty input, single-element data, maximum/minimum representable values, duplicate values, full-capacity states, allocation failure where applicable, and boundary indices.\n\n## Complexity\nState time and auxiliary-space complexity whenever an algorithm is involved, including worst-case behavior and the assumptions that make average-case bounds valid.\n\n## Practice / Exam / Interview focus\nImplement at least three variations, analyze one buggy version, and explain the core invariant or contract in your own words.\n\n## Advanced extensions\nConnect the chapter to neighboring topics and then explore testing, portability, API design, performance, and systems-level implications.\n\n## Related chapters\nSee [INDEX.md](../../INDEX.md) for the complete 76-topic sequence.
+# 19. Pointers: Complete Introduction
+
+## Definition
+A pointer is an object whose value can designate another object or function, subject to C's pointer rules. & obtains an object's address and * dereferences a valid pointer.
+
+## Complete example
+~~~c
+#include <stdio.h>
+
+int main(void) {
+    int value = 42;
+    int *p = &value;
+
+    printf("value=%d\n", value);
+    printf("*p=%d\n", *p);
+    printf("address=%p\n", (void *)p);
+
+    *p = 99;
+    printf("after modification=%d\n", value);
+    return 0;
+}
+~~~
+
+## Pointer states
+A pointer can be null, designate a live object, be one-past an array for limited operations, or be invalid/dangling. Only a valid pointer to a live object may be dereferenced.
+
+## const and pointers
+const int *p prevents modification of the int through p. int *const p prevents reassignment of p. const int *const p prevents both.
+
+## Pointer-to-pointer
+int ** is useful when a function must change the caller's pointer, for example when an allocation function stores a newly allocated address into an output parameter.
+
+## Common mistakes
+Dereferencing null or uninitialized pointers, use-after-free, returning addresses of dead locals, invalid casts, and out-of-bounds pointer arithmetic.
+
+## Practice
+Swap integers through pointers, find an array maximum through a pointer, allocate an object through an output parameter, and implement a safe linked-list insertion.
